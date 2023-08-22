@@ -87,15 +87,91 @@
 #define NOTE_CS8 4435
 #define NOTE_D8  4699
 #define NOTE_DS8 4978
+#define REST 0
 
 #define DECODE_NEC          // Includes Apple and Onkyo
+
+#define BUZZER_PIN 10
+#define USER_BUTTON_PIN 9
+#define USER_LED_PIN 13
 
 #define MOTOR_L_PH 6
 #define MOTOR_L_DIR 7
 #define MOTOR_R_PH 5
 #define MOTOR_R_DIR 4
 
+const int melody1[] = {
+  NOTE_AS4, NOTE_AS4, NOTE_AS4,
+  NOTE_F5, NOTE_C6,
+  NOTE_AS5, NOTE_A5, NOTE_G5, NOTE_F6, NOTE_C6,
+  NOTE_AS5, NOTE_A5, NOTE_G5, NOTE_F6, NOTE_C6,
+  NOTE_AS5, NOTE_A5, NOTE_AS5, NOTE_G5
+};
+
+const int duration1[] = {
+  8, 8, 8,
+  2, 2,
+  8, 8, 8, 2, 4,
+  8, 8, 8, 2, 4,
+  8, 8, 8, 2
+};
+
+const int melody2[] = {
+  REST, NOTE_D4,
+  NOTE_G4, NOTE_AS4, NOTE_A4,
+  NOTE_G4, NOTE_D5,
+  NOTE_C5, 
+  NOTE_A4,
+  NOTE_G4, NOTE_AS4, NOTE_A4,
+  NOTE_F4, NOTE_GS4,
+  NOTE_D4, 
+  NOTE_D4
+};
+
+const int duration2[] = {
+  2, 4,
+  4, 8, 4,
+  2, 4,
+  2, 
+  2,
+  4, 8, 4,
+  2, 4,
+  1, 
+  4
+};
+
+const int melody3[] = {
+  NOTE_E5, NOTE_D5, NOTE_FS4, NOTE_GS4, 
+  NOTE_CS5, NOTE_B4, NOTE_D4, NOTE_E4, 
+  NOTE_B4, NOTE_A4, NOTE_CS4, NOTE_E4,
+  NOTE_A4
+};
+
+const int duration3[] = {
+  8, 8, 4, 4,
+  8, 8, 4, 4,
+  8, 8, 4, 4,
+  2
+};
+
+const int melody4[] = {
+  NOTE_E5, NOTE_E5, REST, NOTE_E5, REST, NOTE_C5, NOTE_E5,
+  NOTE_G5, REST, NOTE_G4, REST
+};
+
+const int duration4[] = {
+  8, 8, 8, 8, 8, 8, 5,
+  8, 8, 8, 8
+};
+
+const int melody_size[] = {
+  19,15,13,11
+};
+
 #include <Arduino.h>
 
+void cageboard_init();
 void MOTOR_L(int);
 void MOTOR_R(int);
+void sing(int);
+void buzz(int, long , long);

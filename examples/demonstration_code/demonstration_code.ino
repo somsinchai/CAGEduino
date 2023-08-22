@@ -11,19 +11,6 @@
 #include "PinDefinitionsAndMore.h"
 #include <IRremote.hpp>
 
-const int melody[] = {
-  NOTE_E7, NOTE_E7, 0, NOTE_E7,
-  0, NOTE_C7, NOTE_E7, 0,
-  NOTE_G7, 0, 0,  0,
-  NOTE_G6, 0, 0, 0,
-};
-
-const int tempo[] = {
-  12, 12, 12, 12,
-  12, 12, 12, 12,
-  12, 12, 12, 12,
-  12, 12, 12, 12,
-};
 
 // 1->0x87 2->0x86 3->0x85 4->0x8b 5->0x8a 6->0x89 7->0x8f 8->0x8e 9->0x8d 0->0x92
 // left->0x90 up->0x81 down->0X88 right->0x82 ok->0x99
@@ -33,51 +20,6 @@ const int tempo[] = {
 // youtube->0x91
 
 volatile unsigned char remote_hash[255] = {0};
-
-
-void sing() {
-
-  int size = sizeof(melody) / sizeof(int);
-  for (int thisNote = 0; thisNote < size; thisNote++) {
-
-    // to calculate the note duration, take one second
-    // divided by the note type.
-    //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
-    int noteDuration = 1000 / tempo[thisNote];
-
-    buzz(melodyPin, melody[thisNote], noteDuration);
-
-    // to distinguish the notes, set a minimum time between them.
-    // the note's duration + 30% seems to work well:
-    int pauseBetweenNotes = noteDuration * 1.30;
-    delay(pauseBetweenNotes);
-
-    // stop the tone playing:
-    buzz(melodyPin, 0, noteDuration);
-
-  }
-
-}
-
-void buzz(int targetPin, long frequency, long length) {
-  digitalWrite(13, HIGH);
-  long delayValue = 1000000 / frequency / 2; // calculate the delay value between transitions
-  //// 1 second's worth of microseconds, divided by the frequency, then split in half since
-  //// there are two phases to each cycle
-  long numCycles = frequency * length / 1000; // calculate the number of cycles for proper timing
-  //// multiply frequency, which is really cycles per second, by the number of seconds to
-  //// get the total number of cycles to produce
-  for (long i = 0; i < numCycles; i++) { // for the calculated length of time...
-    digitalWrite(targetPin, HIGH); // write the buzzer pin high to push out the diaphram
-    delayMicroseconds(delayValue); // wait for the calculated delay value
-    digitalWrite(targetPin, LOW); // write the buzzer pin low to pull back the diaphram
-    delayMicroseconds(delayValue); // wait again or the calculated delay value
-  }
-  digitalWrite(13, LOW);
-
-}
-
-
 
 TM1650 d;
 Adafruit_NeoPixel pixels(2, 8, NEO_GRB + NEO_KHZ800);
@@ -235,7 +177,7 @@ void setup() {
   printActiveIRProtocols(&Serial);
   Serial.println(F("at pin " STR(IR_RECEIVE_PIN)));
 
-  sing();
+  sing(0);
   d.displayString("Bot ");
   delay(1000);
   d.displayString("RDY ");
