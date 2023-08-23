@@ -65,7 +65,7 @@ void sing(int soun_num = 3) {
     // to calculate the note duration, take one second
     // divided by the note type.
     //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
-    int noteDuration = 1000 / tempo[thisNote];
+    int noteDuration = 600 / tempo[thisNote];
 
     buzz(BUZZER_PIN , melody[thisNote], noteDuration);
 
