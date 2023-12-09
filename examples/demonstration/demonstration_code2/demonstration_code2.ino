@@ -315,7 +315,7 @@ void loop() {
           }
           if (prog_dir == 0) {  // left;
             disp[3] = '7';
-          } else if (prog_dir == 1) {  // left;
+          } else if (prog_dir == 1) {  // right;
             disp[3] = 'r';
           } else {
             disp[3] = '|';
