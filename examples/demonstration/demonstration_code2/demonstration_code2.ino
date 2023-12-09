@@ -1,4 +1,4 @@
-#define IR_RECEIVE_PIN  2
+#define IR_RECEIVE_PIN 2
 #define melodyPin 10
 #define BUT_PIN 9
 
@@ -19,7 +19,7 @@
 // E->0xcc F->0xca G->0xcb E->0xc8
 // youtube->0x91
 
-volatile unsigned char remote_hash[255] = {0};
+volatile unsigned char remote_hash[255] = { 0 };
 
 TM1650 d;
 Adafruit_NeoPixel pixels(2, 8, NEO_GRB + NEO_KHZ800);
@@ -54,15 +54,20 @@ int draw_flag = 0;
 unsigned int prog_digi = 0;
 byte prog_dir = 0;
 
-const unsigned long weights[5] = {0, 250, 500, 750, 1000};
+const unsigned long weights[5] = { 0, 250, 500, 750, 1000 };
 const unsigned long sum_weight = 2500;
 
 unsigned long track_sensor_read() {
-  track_sensor_raw_value[0] = (1024 - analogRead(A6)); track_sensor_raw_value[0] = (1024 - analogRead(A6));
-  track_sensor_raw_value[1] = (1024 - analogRead(A7)); track_sensor_raw_value[1] = (1024 - analogRead(A7));
-  track_sensor_raw_value[2] = (1024 - analogRead(A0)); track_sensor_raw_value[2] = (1024 - analogRead(A0));
-  track_sensor_raw_value[3] = (1024 - analogRead(A1)); track_sensor_raw_value[3] = (1024 - analogRead(A1));
-  track_sensor_raw_value[4] = (1024 - analogRead(A2)); track_sensor_raw_value[4] = (1024 - analogRead(A2));
+  track_sensor_raw_value[0] = (1024 - analogRead(A6));
+  track_sensor_raw_value[0] = (1024 - analogRead(A6));
+  track_sensor_raw_value[1] = (1024 - analogRead(A7));
+  track_sensor_raw_value[1] = (1024 - analogRead(A7));
+  track_sensor_raw_value[2] = (1024 - analogRead(A0));
+  track_sensor_raw_value[2] = (1024 - analogRead(A0));
+  track_sensor_raw_value[3] = (1024 - analogRead(A1));
+  track_sensor_raw_value[3] = (1024 - analogRead(A1));
+  track_sensor_raw_value[4] = (1024 - analogRead(A2));
+  track_sensor_raw_value[4] = (1024 - analogRead(A2));
 
   for (int i = 0; i < 5; i++) {
     if (track_sensor_raw_value[i] < track_sensor_lower_th[i]) {
@@ -72,7 +77,7 @@ unsigned long track_sensor_read() {
       track_sensor_raw_value[i] = track_sensor_upper_th[i];
     }
 
-    track_sensor_norm_value[i] = (track_sensor_raw_value[i] - track_sensor_lower_th[i ]);
+    track_sensor_norm_value[i] = (track_sensor_raw_value[i] - track_sensor_lower_th[i]);
     track_sensor_norm_value[i] *= 1000;
     track_sensor_norm_value[i] /= track_sensor_range[i];
   }
@@ -98,7 +103,7 @@ unsigned long track_sensor_read() {
   ret /= sum_x;
   Serial.println(ret);
 
-  if (sum_x < 1000 || sum_x < 1000) { // jud
+  if (sum_x < 1000 || sum_x < 1000) {  // jud
     ret = 3000;
   }
 
@@ -120,14 +125,14 @@ void set_remote_hash() {
   remote_hash[0x8e] = 8;
   remote_hash[0x8d] = 9;
   remote_hash[0x92] = 0;
-  remote_hash[0xc1] = 10; //A
-  remote_hash[0xc2] = 11; //B
-  remote_hash[0xc3] = 12; //C
-  remote_hash[0xc0] = 13; //D
-  remote_hash[0xcc] = 14; //E
-  remote_hash[0xca] = 15; //F
-  remote_hash[0xcb] = 16; //G
-  remote_hash[0xc8] = 17; //H
+  remote_hash[0xc1] = 10;  //A
+  remote_hash[0xc2] = 11;  //B
+  remote_hash[0xc3] = 12;  //C
+  remote_hash[0xc0] = 13;  //D
+  remote_hash[0xcc] = 14;  //E
+  remote_hash[0xca] = 15;  //F
+  remote_hash[0xcb] = 16;  //G
+  remote_hash[0xc8] = 17;  //H
 }
 
 
@@ -137,8 +142,8 @@ void setup() {
   Wire.begin();
   Serial.begin(115200);
 
-  pinMode(3, OUTPUT);//buzzer
-  pinMode(13, OUTPUT);//led indicator when singing a note
+  pinMode(3, OUTPUT);   //buzzer
+  pinMode(13, OUTPUT);  //led indicator when singing a note
 
   pinMode(MOTOR_L_PH, OUTPUT);
   pinMode(MOTOR_L_DIR, OUTPUT);
@@ -188,7 +193,7 @@ void setup() {
 
   // try to load sensor value
 
-  for (int i = 0; i < 5; i++) { // load
+  for (int i = 0; i < 5; i++) {  // load
 
     track_sensor_lower_th[i] = (EEPROM.read(5 + (i * 4) + 1) & 0x00FF);
     track_sensor_lower_th[i] <<= 8;
@@ -226,8 +231,7 @@ void loop() {
         // do something
       } else if (IrReceiver.decodedIRData.command == 0x11) {
         // do something else
-      }
-      else if (IrReceiver.decodedIRData.command == 0x96) {
+      } else if (IrReceiver.decodedIRData.command == 0x96) {
         //remote_last_command = 0x96;
       }
 
@@ -241,13 +245,12 @@ void loop() {
     but_state = digitalRead(BUT_PIN);
     if (but_state != last_but_state && but_state == LOW) {
       last_but_sec = currentMillis;
-
     }
     if (but_state == LOW) {
 
       Serial.println(currentMillis - last_but_sec);
       if (currentMillis - last_but_sec > 3000) {
-        but_hold_state = 1; // hold
+        but_hold_state = 1;  // hold
       }
     }
 
@@ -258,7 +261,7 @@ void loop() {
   if (currentMillis - APP_previousMillis >= APP_interval) {
     APP_previousMillis = currentMillis;
 
-    if (mode == 0) { // idle
+    if (mode == 0) {  // idle
       if (mode_change == 0) {
 
 
@@ -274,21 +277,19 @@ void loop() {
         }
 
         if (remote_last_command >= 0) {
-          if ( remote_hash[remote_last_command] >= 10 && remote_hash[remote_last_command] <= 18 ) { // A - H
-            mode_change = remote_hash[remote_last_command] - 9; // A to 1
+          if (remote_hash[remote_last_command] >= 10 && remote_hash[remote_last_command] <= 18) {  // A - H
+            mode_change = remote_hash[remote_last_command] - 9;                                    // A to 1
             prog_digi = EEPROM.read(0x20 + (mode_change * 2));
             prog_dir = EEPROM.read(0x20 + (mode_change * 2) + 1);
             Serial.print("run ");
             Serial.println(mode_change);
             draw_flag = 1;
             remote_last_command = -1;
-          }
-          else if (remote_last_command == 0x90) { // left
+          } else if (remote_last_command == 0x90) {  // left
             mode_change = 20;
             draw_flag = 1;
             remote_last_command = -1;
-          }
-          else if (remote_last_command == 0x82) { // right
+          } else if (remote_last_command == 0x82) {  // right
             mode_change = 21;
             draw_flag = 1;
             remote_last_command = -1;
@@ -296,8 +297,7 @@ void loop() {
         }
 
 
-      }
-      else if (mode_change >= 1 && mode_change < 20) { // tracking
+      } else if (mode_change >= 1 && mode_change < 20) {  // tracking
         if (draw_flag == 1) {
           Serial.println("running");
           char disp[] = "    ";
@@ -305,22 +305,22 @@ void loop() {
           if (prog_digi >= 100) {
             disp[1] = 'E';
             disp[2] = 'E';
-          }
-          else {
+          } else {
             if (prog_digi < 10) {
               disp[1] = ' ';
-            }
-            else {
+            } else {
               disp[1] = '0' + (prog_digi / 10);
             }
             disp[2] = '0' + (prog_digi % 10);
           }
-          if (prog_dir == 0) { // left;
+          if (prog_dir == 0) {  // left;
             disp[3] = '7';
-          }
-          else {
+          } else if (prog_dir == 1) {  // left;
             disp[3] = 'r';
+          } else {
+            disp[3] = '|';
           }
+          
 
           d.displayString(disp);
           pixels.setPixelColor(0, pixels.Color(0, 5, 5));
@@ -340,19 +340,16 @@ void loop() {
           if (sensor_read <= 1000) {
             MOTOR_L(prog_digi - speed_reduce);
             MOTOR_R(prog_digi + speed_reduce);
-          }
-          else {
-            if (prog_dir == 0) { // left
+          } else {
+            if (prog_dir == 0) {  // left
               //MOTOR_L(prog_digi / 5);
               MOTOR_L(-(prog_digi / 2));
               MOTOR_R(prog_digi);
-            }
-            else if (prog_dir == 1) {
+            } else if (prog_dir == 1) {
               MOTOR_L(prog_digi);
               //MOTOR_R(prog_digi / 5);
               MOTOR_R(-(prog_digi / 2));
-            }
-            else {
+            } else {
               MOTOR_L((prog_digi / 4) * 3);
               MOTOR_R((prog_digi / 4) * 3);
             }
@@ -362,12 +359,10 @@ void loop() {
           if (IrReceiver.decode()) {
             remote_last_command = IrReceiver.decodedIRData.command;
             IrReceiver.resume();
-            if (remote_last_command == 0x96) { // exit
+            if (remote_last_command == 0x96) {  // exit
               break;
             }
           }
-
-
         }
 
         MOTOR_L(0);
@@ -376,11 +371,11 @@ void loop() {
         IrReceiver.resume();
         but_hold_state = 0;
         draw_flag = 1;
-        mode_change = 0; // go back to idle
+        mode_change = 0;  // go back to idle
 
       }
 
-      else if (mode_change >= 20) { // tracking
+      else if (mode_change >= 20) {  // tracking
         if (draw_flag == 1) {
           Serial.println("left");
           if (mode_change == 20) {
@@ -392,8 +387,7 @@ void loop() {
             MOTOR_L(-20);
             MOTOR_R(50);
             delay(200);
-          }
-          else if (mode_change == 21) {
+          } else if (mode_change == 21) {
             char disp[] = "RIGHT";
             d.displayString(disp);
             pixels.setPixelColor(0, pixels.Color(0, 0, 5));
@@ -413,8 +407,7 @@ void loop() {
         IrReceiver.resume();
         but_hold_state = 0;
         draw_flag = 1;
-        mode_change = 0; // go back to idle
-
+        mode_change = 0;  // go back to idle
       }
 
 
@@ -425,9 +418,8 @@ void loop() {
         draw_flag = 1;
       }
 
-    }
-    else if (mode == 1) { // main menu
-      if (mode_change == 0) { // welcome
+    } else if (mode == 1) {    // main menu
+      if (mode_change == 0) {  // welcome
         if (draw_flag == 1) {
           Serial.println("haruhi2");
           d.displayString("PROG");
@@ -441,8 +433,8 @@ void loop() {
         }
         Serial.println(remote_last_command);
 
-        if ( remote_hash[remote_last_command] >= 10 && remote_hash[remote_last_command] <= 18 ) {
-          mode_change = remote_hash[remote_last_command] - 9; // A to 1
+        if (remote_hash[remote_last_command] >= 10 && remote_hash[remote_last_command] <= 18) {
+          mode_change = remote_hash[remote_last_command] - 9;  // A to 1
           prog_digi = EEPROM.read(0x20 + (mode_change * 2));
           prog_dir = EEPROM.read(0x20 + (mode_change * 2) + 1);
           Serial.print("enter ");
@@ -452,7 +444,7 @@ void loop() {
         }
 
         // test dir
-        if (remote_last_command == 0x81) { // up
+        if (remote_last_command == 0x81) {  // up
           d.displayString("UP  ");
           pixels.setPixelColor(0, pixels.Color(5, 5, 0));
           pixels.setPixelColor(1, pixels.Color(0, 5, 5));
@@ -465,7 +457,7 @@ void loop() {
           draw_flag = 1;
           remote_last_command = -1;
         }
-        if (remote_last_command == 0x88) { // down
+        if (remote_last_command == 0x88) {  // down
           d.displayString("DOWN");
           pixels.setPixelColor(0, pixels.Color(5, 5, 0));
           pixels.setPixelColor(1, pixels.Color(0, 5, 5));
@@ -478,7 +470,7 @@ void loop() {
           draw_flag = 1;
           remote_last_command = -1;
         }
-        if (remote_last_command == 0x90) { // left
+        if (remote_last_command == 0x90) {  // left
           d.displayString("LEFT");
           pixels.setPixelColor(0, pixels.Color(5, 5, 0));
           pixels.setPixelColor(1, pixels.Color(0, 5, 5));
@@ -491,7 +483,7 @@ void loop() {
           draw_flag = 1;
           remote_last_command = -1;
         }
-        if (remote_last_command == 0x82) { // right
+        if (remote_last_command == 0x82) {  // right
           d.displayString("RIGH");
           pixels.setPixelColor(0, pixels.Color(5, 5, 0));
           pixels.setPixelColor(1, pixels.Color(0, 5, 5));
@@ -507,7 +499,7 @@ void loop() {
         // left->0x90 up->0x81 down->0X88 right->0x82 ok->0x99
         // 1->0x87 2->0x86
         //test sensor
-        if (remote_last_command == 0x87) { // 1
+        if (remote_last_command == 0x87) {  // 1
           pixels.setPixelColor(0, pixels.Color(5, 5, 0));
           pixels.setPixelColor(1, pixels.Color(0, 5, 5));
           pixels.show();
@@ -530,7 +522,7 @@ void loop() {
         }
 
         // cal sensor
-        if (remote_last_command == 0x86) { // 2
+        if (remote_last_command == 0x86) {  // 2
           d.displayString("CAL ");
 
           pixels.setPixelColor(0, pixels.Color(0, 0, 0));
@@ -553,27 +545,32 @@ void loop() {
           }
 
           for (int i = 400; i >= 0; i--) {
-            sensor_read = (1024 - analogRead(A6)); sensor_read = (1024 - analogRead(A6));
+            sensor_read = (1024 - analogRead(A6));
+            sensor_read = (1024 - analogRead(A6));
             if (sensor_read > track_sensor_upper_th[0]) track_sensor_upper_th[0] = sensor_read;
             if (sensor_read < track_sensor_lower_th[0]) track_sensor_lower_th[0] = sensor_read;
             delay(5);
 
-            sensor_read = (1024 - analogRead(A7)); sensor_read = (1024 - analogRead(A7));
+            sensor_read = (1024 - analogRead(A7));
+            sensor_read = (1024 - analogRead(A7));
             if (sensor_read > track_sensor_upper_th[1]) track_sensor_upper_th[1] = sensor_read;
             if (sensor_read < track_sensor_lower_th[1]) track_sensor_lower_th[1] = sensor_read;
             delay(5);
 
-            sensor_read = (1024 - analogRead(A0)); sensor_read = (1024 - analogRead(A0));
+            sensor_read = (1024 - analogRead(A0));
+            sensor_read = (1024 - analogRead(A0));
             if (sensor_read > track_sensor_upper_th[2]) track_sensor_upper_th[2] = sensor_read;
             if (sensor_read < track_sensor_lower_th[2]) track_sensor_lower_th[2] = sensor_read;
             delay(5);
 
-            sensor_read = (1024 - analogRead(A1)); sensor_read = (1024 - analogRead(A1));
+            sensor_read = (1024 - analogRead(A1));
+            sensor_read = (1024 - analogRead(A1));
             if (sensor_read > track_sensor_upper_th[3]) track_sensor_upper_th[3] = sensor_read;
             if (sensor_read < track_sensor_lower_th[3]) track_sensor_lower_th[3] = sensor_read;
             delay(5);
 
-            sensor_read = (1024 - analogRead(A2)); sensor_read = (1024 - analogRead(A2));
+            sensor_read = (1024 - analogRead(A2));
+            sensor_read = (1024 - analogRead(A2));
             if (sensor_read > track_sensor_upper_th[4]) track_sensor_upper_th[4] = sensor_read;
             if (sensor_read < track_sensor_lower_th[4]) track_sensor_lower_th[4] = sensor_read;
             delay(5);
@@ -613,7 +610,7 @@ void loop() {
           }
           Serial.println();
 
-          for (int i = 0; i < 5; i++) { // save
+          for (int i = 0; i < 5; i++) {  // save
             EEPROM.write(5 + (i * 4) + 0, track_sensor_lower_th[i] & 0x00FF);
             EEPROM.write(5 + (i * 4) + 1, (track_sensor_lower_th[i] >> 8) & 0x00FF);
             EEPROM.write(5 + (i * 4) + 2, track_sensor_upper_th[i] & 0x00FF);
@@ -624,7 +621,7 @@ void loop() {
           remote_last_command = -1;
         }
 
-        if (remote_last_command == 0x85) { // 3
+        if (remote_last_command == 0x85) {  // 3
           d.displayString("3");
           pixels.setPixelColor(0, pixels.Color(5, 5, 0));
           pixels.setPixelColor(1, pixels.Color(0, 5, 5));
@@ -667,8 +664,7 @@ void loop() {
 
 
 
-      }
-      else if (mode_change >= 1) { // welcome
+      } else if (mode_change >= 1) {  // welcome
         if (draw_flag == 1) {
           Serial.println("tune");
           char disp[] = "    ";
@@ -676,23 +672,19 @@ void loop() {
           if (prog_digi >= 100) {
             disp[1] = 'E';
             disp[2] = 'E';
-          }
-          else {
+          } else {
             if (prog_digi < 10) {
               disp[1] = ' ';
-            }
-            else {
+            } else {
               disp[1] = '0' + (prog_digi / 10);
             }
             disp[2] = '0' + (prog_digi % 10);
           }
-          if (prog_dir == 0) { // left;
+          if (prog_dir == 0) {  // left;
             disp[3] = '7';
-          }
-          else if (prog_dir == 1) { // right
+          } else if (prog_dir == 1) {  // right
             disp[3] = 'r';
-          }
-          else { // str
+          } else {  // str
             disp[3] = 'l';
           }
 
@@ -710,9 +702,9 @@ void loop() {
 
         Serial.println(remote_last_command);
 
-        if (remote_last_command >= 0 ) {
-          if ( remote_hash[remote_last_command] >= 10 && remote_hash[remote_last_command] <= 18 ) {
-            mode_change = remote_hash[remote_last_command] - 9; // A to 1
+        if (remote_last_command >= 0) {
+          if (remote_hash[remote_last_command] >= 10 && remote_hash[remote_last_command] <= 18) {
+            mode_change = remote_hash[remote_last_command] - 9;  // A to 1
             prog_digi = EEPROM.read(0x20 + (mode_change * 2));
             prog_dir = EEPROM.read(0x20 + (mode_change * 2) + 1);
             Serial.print("enter ");
@@ -723,7 +715,7 @@ void loop() {
             remote_last_command = -1;
           }
 
-          if ( remote_hash[remote_last_command] >= 0 && remote_hash[remote_last_command] <= 9) { // digi
+          if (remote_hash[remote_last_command] >= 0 && remote_hash[remote_last_command] <= 9) {  // digi
             if (prog_digi >= 100) {
               prog_digi = 0;
             }
@@ -745,16 +737,16 @@ void loop() {
             draw_flag = 1;
             remote_last_command = -1;
           }
-          if (remote_last_command == 0x81) { // up
+          if (remote_last_command == 0x81) {  // up
             prog_dir = 2;
             draw_flag = 1;
             remote_last_command = -1;
           }
-          if (remote_last_command == 0x99) { // ok
+          if (remote_last_command == 0x99) {  // ok
 
             EEPROM.write(0x20 + (mode_change * 2), (prog_digi & 0xFF));
             EEPROM.write(0x20 + (mode_change * 2) + 1, prog_dir);
-            mode_change = 0; // A to 1
+            mode_change = 0;  // A to 1
             Serial.print("Save");
             Serial.println(prog_digi);
             Serial.println(prog_dir);
@@ -774,13 +766,9 @@ void loop() {
         remote_last_command = -1;
       }
 
+    } else if (mode == 2) {
     }
-    else if (mode == 2) {
-
-    }
-
   }
-
 }
 
 // left->0x90 up->0x81 down->0X88 right->0x82 ok->0x99
